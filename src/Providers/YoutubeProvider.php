@@ -46,8 +46,9 @@ class YoutubeProvider implements Contracts\MatineeProvider
                     if (! $state) {
                         return 0;
                     }
+
                     return Carbon::parse($state)->diffInSeconds('00:00:00');
-                })
+                }),
         ];
     }
 }

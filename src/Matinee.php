@@ -63,7 +63,7 @@ class Matinee extends Forms\Components\Fieldset
     {
         return [
             ...$this->providers ?? [],
-            ...[VimeoProvider::class, YoutubeProvider::class]
+            ...[VimeoProvider::class, YoutubeProvider::class],
         ];
     }
 
