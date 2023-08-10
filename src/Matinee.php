@@ -12,44 +12,51 @@ class Matinee extends Forms\Components\Fieldset
 
     protected function setUp(): void
     {
-        $this->schema([
-            Forms\Components\TextInput::make('url')
-                ->label(__('matinee::oembed.url'))
-                ->reactive()
-                ->required(),
-            ...$this->getProvidersSchema(),
-            Forms\Components\Checkbox::make('responsive')
-                ->default(true)
-                ->reactive()
-                ->label(__('matinee::oembed.responsive'))
-                ->afterStateUpdated(function (callable $set, $state) {
-                    if ($state) {
-                        $set('width', '16');
-                        $set('height', '9');
-                    } else {
-                        $set('width', '640');
-                        $set('height', '480');
-                    }
-                })
-                ->columnSpan('full'),
-            Forms\Components\Group::make([
-                Forms\Components\TextInput::make('width')
-                    ->reactive()
-                    ->required()
-                    ->label(__('matinee::oembed.width'))
-                    ->default('16'),
-                Forms\Components\TextInput::make('height')
-                    ->reactive()
-                    ->required()
-                    ->label(__('matinee::oembed.height'))
-                    ->default('9'),
-            ])->columns(['md' => 2]),
-            Forms\Components\ViewField::make('preview')
-                ->view('matinee::forms.oembed.preview')
-                ->label(fn (): string => __('matinee::oembed.preview'))
-                ->columnSpan('full')
-                ->dehydrated(false),
-        ]);
+        $this
+            ->label($this->getLabel())
+            ->schema([
+                Forms\Components\Group::make([
+                    Forms\Components\Hidden::make('embed_url'),
+                    Forms\Components\TextInput::make('url')
+                        ->label(__('matinee::matinee.url'))
+                        ->live(debounce: 500)
+                        ->required()
+                        ->columnSpanFull()
+                        ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get, $state) {
+                            if (! $state) {
+                                $set('embed_url', null);
+                            }
+
+                            $set('embed_url', $this->convertUrl($get('url')));
+                        }),
+                    ...$this->getProvidersSchema(),
+                    Forms\Components\Checkbox::make('responsive')
+                        ->reactive()
+                        ->label(__('matinee::matinee.responsive'))
+                        ->afterStateHydrated(fn ($component, $state) => $component->state($state ?: true))
+                        ->afterStateUpdated(function (Forms\Set $set, $state) {
+                            if ($state) {
+                                $set('width', '16');
+                                $set('height', '9');
+                            } else {
+                                $set('width', '640');
+                                $set('height', '480');
+                            }
+                        })
+                        ->columnSpan('full'),
+                    Forms\Components\TextInput::make('width')
+                        ->required()
+                        ->label(__('matinee::matinee.width'))
+                        ->afterStateHydrated(fn ($component, $state) => $component->state($state ?: '16')),
+                    Forms\Components\TextInput::make('height')
+                        ->required()
+                        ->label(__('matinee::matinee.height'))
+                        ->afterStateHydrated(fn ($component, $state) => $component->state($state ?: '9')),
+                ])->columns(['md' => 2]),
+                Forms\Components\ViewField::make('preview')
+                    ->view('matinee::preview')
+                    ->label(fn(): string => __('matinee::matinee.preview')),
+            ])->columns(['md' => 2]);
     }
 
     public function providers(array $providers): self
@@ -61,10 +68,12 @@ class Matinee extends Forms\Components\Fieldset
 
     public function getProviders(): array
     {
-        return [
+        return collect([
             ...$this->providers ?? [],
             ...[VimeoProvider::class, YoutubeProvider::class]
-        ];
+        ])->mapWithKeys(function ($provider) {
+            return [$provider::make()->getId() => $provider];
+        })->toArray();
     }
 
     public function getProvidersSchema(): array
@@ -75,19 +84,34 @@ class Matinee extends Forms\Components\Fieldset
             $provider = $provider::make();
 
             $providerOptions[] = Forms\Components\Group::make([
-                Forms\Components\CheckboxList::make($provider->getId() . '_options')
+                Forms\Components\CheckboxList::make('params')
                     ->hiddenLabel()
                     ->gridDirection('row')
                     ->columns(3)
+                    ->live()
                     ->options(function () use ($provider) {
                         return $provider->getOptions();
                     }),
-                ...$provider->getAddtionalFields(),
-            ])->visible(function (Forms\Get $get) use ($provider) {
+                ...$provider->getAdditionalFields(),
+            ])->statePath('options')
+                ->visible(function (Forms\Get $get) use ($provider) {
                 return $provider->shouldShow($get('url'));
-            });
+            })->columnSpanFull();
         }
 
         return $providerOptions;
+    }
+
+    public function convertUrl(string $url, array $options = []): string
+    {
+        $provider = collect($this->getProviders())
+            ->filter(fn ($provider) => $provider::make()->shouldShow($url))
+            ->sole();
+
+        if ($provider) {
+            return $provider::make()->convertUrl($url, $options);
+        }
+
+        return $url;
     }
 }

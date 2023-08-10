@@ -16,4 +16,5 @@ return [
     'nocookie' => 'No Cookie',
     'start_at' => 'Start At',
     'local' => 'Local',
+    'preview' => 'Preview'
 ];
