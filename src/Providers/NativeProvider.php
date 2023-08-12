@@ -2,42 +2,33 @@
 
 namespace Awcodes\Matinee\Providers;
 
-use Illuminate\Support\Str;
+use Awcodes\Matinee\Providers\Concerns\IsMatineeProvider;
 
 class NativeProvider implements Contracts\MatineeProvider
 {
-    use Concerns\IsProvider;
+    use IsMatineeProvider;
 
     public function getId(): ?string
     {
         return 'native';
     }
 
-    public function shouldShow(?string $url): bool
+    public function getDomains(): array
     {
-        if (! $url) {
-            return false;
-        }
-
-        return ! Str::of($url)->contains(['vimeo', 'youtube', 'youtu.be']);
+        return [];
     }
 
     public function getOptions(): array
     {
         return [
-            'autoplay' => __('matinee::matinee.autoplay'),
-            'loop' => __('matinee::matinee.loop'),
-            'controls' => __('matinee::matinee.controls'),
+            'autoplay' => 0,
+            'loop' => 0,
+            'controls' => 1,
         ];
     }
 
-    public function getAdditionalFields(): array
+    public function convertUrl(array $options = []): string
     {
-        return [];
-    }
-
-    public function convertUrl(string $url, array $options = []): string
-    {
-        return $url;
+        return $this->url;
     }
 }

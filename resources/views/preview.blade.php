@@ -1,7 +1,7 @@
 @php
-    $state = $getState();
+    $state = null;
 
-    ray($state);
+    ray($getState());
 
     $params = $state ? [
         'autoplay' => $state['autoplay'] ? 1 : 0,

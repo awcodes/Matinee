@@ -2,98 +2,65 @@
 
 namespace Awcodes\Matinee\Providers;
 
+use Awcodes\Matinee\Providers\Concerns\IsMatineeProvider;
 use Carbon\Carbon;
-use Carbon\CarbonInterval;
-use Filament\Forms;
 use Illuminate\Support\Str;
 
 class YoutubeProvider implements Contracts\MatineeProvider
 {
-    use Concerns\IsProvider;
+    use IsMatineeProvider;
 
     public function getId(): ?string
     {
         return 'youtube';
     }
 
-    public function shouldShow(?string $url): bool
+    public function getDomains(): array
     {
-        if (! $url) {
-            return false;
-        }
-
-        return Str::of($url)->contains(['youtube', 'youtu.be']);
+        return [
+            'youtube.com',
+            'youtu.be',
+        ];
     }
 
     public function getOptions(): array
     {
         return [
-            'controls' => __('matinee::matinee.controls'),
-            'nocookie' => __('matinee::matinee.nocookie'),
+            'controls' => 1,
+            'nocookie' => 0,
+            'start' => '00:00:00',
         ];
     }
 
-    public function getAdditionalFields(): array
+    public function convertUrl(?array $options = []): string
     {
-        return [
-            Forms\Components\TimePicker::make('start_at')
-                ->label(__('matinee::matinee.start_at'))
-                ->live()
-                ->date(false)
-                ->afterStateHydrated(function (Forms\Components\TimePicker $component, $state): void {
-                    if (! $state) {
-                        return;
-                    }
+        $baseUrl = isset($options['nocookie']) && ($options['nocookie'] === '1' || $options['nocookie'] === 'true')
+            ? 'https://www.youtube-nocookie.com/embed/'
+            : 'https://www.youtube.com/embed/';
 
-                    $state = CarbonInterval::seconds($state)->cascade();
-                    $component->state(Carbon::parse($state->h . ':' . $state->i . ':' . $state->s)->format('Y-m-d H:i:s'));
-                })
-                ->dehydrateStateUsing(function ($state): int {
-                    if (! $state) {
-                        return 0;
-                    }
+        unset($options['nocookie']);
 
-                    return Carbon::parse($state)->diffInSeconds('00:00:00');
-                }),
-        ];
-    }
-
-    public function convertUrl(string $url, array $options = []): string
-    {
-        if (Str::of($url)->contains('/embed/')) {
-            return $url;
+        if (Str::of($this->url)->contains('youtu.be')) {
+            $id = Str::of($this->url)->after('youtu.be/');
+        } else {
+            preg_match('/v=([-\w]+)/', $this->url, $matches);
+            $id = $matches[1] ?? null;
         }
 
-        if (Str::of($url)->contains('youtu.be')) {
-            $id = Str::of($url)->after('youtu.be/');
+        $baseUrl = $baseUrl . $id;
 
-            if (! $id) {
-                return '';
-            }
-
-            return filled($options['params']) && $options['nocookie']
-                ? 'https://www.youtube-nocookie.com/embed/' . $id
-                : 'https://www.youtube.com/embed/' . $id;
-        }
-
-        preg_match('/v=([-\w]+)/', $url, $matches);
-
-        if (! $matches || ! $matches[1]) {
-            return '';
+        if (isset($options['start'])) {
+            $options['start'] = Str::of($options['start'])->isMatch('/([0-9]{2}):([0-9]{2}):([0-9]{2})/')
+                ? Carbon::parse($options['start'])->diffInSeconds('00:00:00')
+                : null;
         }
 
         if (filled($options)) {
+            $query = http_build_query($options);
 
-        $params = [
-            'controls' => isset($options['params']['controls']) ?? 0,
-        ];
-
-        if ($options['start_at']) {
-            $params['start'] = $options['start_at'];
+            return "{$baseUrl}?{$query}";
         }
 
-        $query = http_build_query($params);
-
-        return "https://www.youtube.com/embed/{$matches[1]}?{$query}";
+        return $baseUrl;
     }
 }

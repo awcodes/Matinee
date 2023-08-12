@@ -16,5 +16,7 @@ return [
     'nocookie' => 'No Cookie',
     'start_at' => 'Start At',
     'local' => 'Local',
-    'preview' => 'Preview'
+    'preview' => 'Preview',
+    'options' => 'Options',
+    'invalid_url' => 'There is no provider for this URL.',
 ];

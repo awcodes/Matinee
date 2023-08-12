@@ -2,62 +2,51 @@
 
 namespace Awcodes\Matinee\Providers;
 
+use Awcodes\Matinee\Providers\Concerns\IsMatineeProvider;
 use Illuminate\Support\Str;
 
 class VimeoProvider implements Contracts\MatineeProvider
 {
-    use Concerns\IsProvider;
+    use IsMatineeProvider;
 
-    public function getId(): ?string
+    public function getDomains(): array
     {
-        return 'vimeo';
-    }
-
-    public function shouldShow(?string $url): bool
-    {
-        if (! $url) {
-            return false;
-        }
-
-        return str_contains($url, 'vimeo');
+        return [
+            'vimeo.com',
+        ];
     }
 
     public function getOptions(): array
     {
         return [
-            'autoplay' => __('matinee::matinee.autoplay'),
-            'loop' => __('matinee::matinee.loop'),
-            'show_title' => __('matinee::matinee.title'),
-            'byline' => __('matinee::matinee.byline'),
-            'portrait' => __('matinee::matinee.portrait'),
+            'autoplay' => 0,
+            'loop' => 0,
+            'show_title' => 0,
+            'byline' => 0,
+            'portrait' => 0,
         ];
     }
 
-    public function getAdditionalFields(): array
+    public function convertUrl(?array $options = []): string
     {
-        return [];
-    }
+        $baseUrl = 'https://player.vimeo.com/video/';
 
-    public function convertUrl(string $url, array $options = []): string
-    {
-        if (Str::of($url)->contains('/video/')) {
-            return $url;
+        if (Str::of($this->url)->contains('/video/')) {
+            preg_match('/([0-9]+)/', $this->url, $matches);
+            $id = $matches[1] ?? null;
+        } else {
+            preg_match('/\.com\/([0-9]+)/', $this->url, $matches);
+            $id = $matches[1] ?? null;
         }
 
-        preg_match('/\.com\/([0-9]+)/', $url, $matches);
+        $baseUrl = $baseUrl . $id;
 
-        if (! $matches || ! $matches[1]) {
-            return '';
+        if (filled($options)) {
+            $query = http_build_query($options);
+
+            return "{$baseUrl}?{$query}";
         }
 
-        $query = http_build_query([
-            'autoplay' => $options['autoplay'] ?? false,
-            'loop' => $options['loop'] ?? false,
-            'title' => $options['show_title'] ?? false,
-            'byline' => $options['byline'] ?? false,
-            'portrait' => $options['portrait'] ?? false,
-        ]);
-
-        return "https://player.vimeo.com/video/{$matches[1]}?{$query}";
+        return $baseUrl;
     }
 }
