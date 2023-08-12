@@ -102,7 +102,7 @@ class Matinee extends Forms\Components\Component
                         ->label(__('matinee::matinee.height'))
                         ->afterStateHydrated(fn ($component, $state) => $component->state($state ?: '9')),
                 ])
-                ->columns()
+                    ->columns(),
             ]);
     }
 
@@ -117,7 +117,7 @@ class Matinee extends Forms\Components\Component
     {
         return collect([
             ...$this->providers ?? [],
-            ...[VimeoProvider::class, YoutubeProvider::class]
+            ...[VimeoProvider::class, YoutubeProvider::class],
         ])->mapWithKeys(function ($provider) {
             $instance = $provider::make();
             $domains = $instance->getDomains();
