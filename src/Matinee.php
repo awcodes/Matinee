@@ -12,8 +12,8 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Set;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Illuminate\Contracts\Support\Htmlable;
 use Livewire\Component;
 
@@ -31,7 +31,7 @@ class Matinee extends FormsComponent
 
     protected bool | Closure | null $shouldShowPreview = null;
 
-    final public function __construct(string $name = null)
+    final public function __construct(?string $name = null)
     {
         $this->name($name);
     }
@@ -56,7 +56,7 @@ class Matinee extends FormsComponent
         return $this->name;
     }
 
-    public function getLabel(): string|Htmlable|null
+    public function getLabel(): string | Htmlable | null
     {
         $label = $this->evaluate($this->name);
         $label = (is_string($label) && $this->shouldTranslateLabel) ?
