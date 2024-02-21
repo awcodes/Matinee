@@ -6,10 +6,18 @@ use Awcodes\Matinee\Providers\Contracts\MatineeProvider;
 use Awcodes\Matinee\Providers\VimeoProvider;
 use Awcodes\Matinee\Providers\YoutubeProvider;
 use Closure;
-use Filament\Forms;
+use Filament\Forms\Components\Component as FormsComponent;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Set;
+use Filament\Forms\Get;
+use Illuminate\Contracts\Support\Htmlable;
 use Livewire\Component;
 
-class Matinee extends Forms\Components\Component
+class Matinee extends FormsComponent
 {
     protected ?array $providers = null;
 
@@ -18,6 +26,10 @@ class Matinee extends Forms\Components\Component
     protected string $view = 'matinee::matinee';
 
     protected string $name;
+
+    protected bool | Closure | null $isRequired = null;
+
+    protected bool | Closure | null $shouldShowPreview = null;
 
     final public function __construct(string $name = null)
     {
@@ -44,65 +56,92 @@ class Matinee extends Forms\Components\Component
         return $this->name;
     }
 
+    public function getLabel(): string|Htmlable|null
+    {
+        $label = $this->evaluate($this->name);
+        $label = (is_string($label) && $this->shouldTranslateLabel) ?
+            __($label) :
+            $label;
+
+        return (string) str($label)->snake(' ')->replace('_', ' ')->title();
+    }
+
     protected function setUp(): void
     {
         $this
-            ->label($this->getLabel())
+            ->statePath($this->getName())
             ->schema([
-                Forms\Components\Hidden::make($this->name . '.embed_url')
-                    ->dehydrateStateUsing(function (Forms\Set $set, Forms\Get $get) {
-                        return $this->getProvider($get($this->name . '.url'))->convertUrl($get($this->name . '.options'));
-                    }),
-                Forms\Components\TextInput::make($this->name . '.url')
-                    ->label(__('matinee::matinee.url'))
+                TextInput::make('url')
+                    ->label(trans('matinee::matinee.url'))
                     ->live(debounce: 500)
-                    ->required()
+                    ->required(fn () => $this->isRequired())
                     ->rules([
                         function () {
                             return function (string $attribute, $value, Closure $fail) {
-                                if (! $this->getProvider($value)) {
-                                    $fail(__('matinee::matinee.invalid_url'));
+                                if ($value && ! $this->getProvider($value)) {
+                                    $fail(trans('matinee::matinee.invalid_url'));
                                 }
                             };
                         },
                     ])
-                    ->afterStateUpdated(function (Forms\Components\TextInput $component, Component $livewire, Forms\Set $set, Forms\Get $get, $state) {
+                    ->afterStateUpdated(function (TextInput $component, Component $livewire, Set $set, Get $get, $state) {
                         if (! $state) {
-                            $set($this->name . '.embed_url', null);
+                            $set('embed_url', null);
                         }
 
                         $livewire->validateOnly($component->getStatePath());
 
                         $provider = $this->getProvider($state);
-                        $set($this->name . '.embed_url', $provider->convertUrl($get($this->name . '.options')));
-                        $set($this->name . '.options', $provider->getOptions());
+                        $set('embed_url', $provider->convertUrl($get('options')));
+                        $set('options', $provider->getOptions());
                     }),
-                Forms\Components\KeyValue::make($this->name . '.options')
-                    ->label(__('matinee::matinee.options')),
-                Forms\Components\Toggle::make($this->name . '.responsive')
-                    ->reactive()
-                    ->label(__('matinee::matinee.responsive'))
-                    ->afterStateHydrated(fn ($component, $state) => $component->state($state ?: true))
-                    ->afterStateUpdated(function (Forms\Set $set, $state) {
-                        if ($state) {
-                            $set($this->name . '.width', '16');
-                            $set($this->name . '.height', '9');
-                        } else {
-                            $set($this->name . '.width', '640');
-                            $set($this->name . '.height', '480');
-                        }
-                    }),
-                Forms\Components\Group::make([
-                    Forms\Components\TextInput::make($this->name . '.width')
-                        ->required()
-                        ->label(__('matinee::matinee.width'))
-                        ->afterStateHydrated(fn ($component, $state) => $component->state($state ?: '16')),
-                    Forms\Components\TextInput::make($this->name . '.height')
-                        ->required()
-                        ->label(__('matinee::matinee.height'))
-                        ->afterStateHydrated(fn ($component, $state) => $component->state($state ?: '9')),
-                ])
-                    ->columns(),
+                Group::make([
+                    Group::make([
+                        Hidden::make('embed_url')
+                            ->dehydrateStateUsing(function (Set $set, Get $get) {
+                                if ($get('url')) {
+                                    return $this
+                                        ->getProvider($get('url'))
+                                        ->convertUrl($get('options'));
+                                }
+
+                                return null;
+                            }),
+                        Group::make([
+                            TextInput::make('width')
+                                ->required(fn () => $this->isRequired())
+                                ->label(trans('matinee::matinee.width'))
+                                ->afterStateHydrated(fn (TextInput $component, $state) => $component->state($state ?: '16'))
+                                ->suffix(function (Get $get) {
+                                    return $get('responsive') ? '%' : 'px';
+                                }),
+                            TextInput::make('height')
+                                ->required(fn () => $this->isRequired())
+                                ->label(trans('matinee::matinee.height'))
+                                ->afterStateHydrated(fn (TextInput $component, $state) => $component->state($state ?: '9'))
+                                ->suffix(function (Get $get) {
+                                    return $get('responsive') ? '%' : 'px';
+                                }),
+                        ])->columns(),
+                        Toggle::make('responsive')
+                            ->live()
+                            ->label(trans('matinee::matinee.responsive'))
+                            ->afterStateHydrated(function (Toggle $component, $state) {
+                                return $component->state($state ?: true);
+                            })
+                            ->afterStateUpdated(function (Set $set, $state) {
+                                if ($state) {
+                                    $set('width', '16');
+                                    $set('height', '9');
+                                } else {
+                                    $set('width', '640');
+                                    $set('height', '480');
+                                }
+                            }),
+                    ]),
+                    KeyValue::make('options')
+                        ->label(trans('matinee::matinee.options')),
+                ])->columns(),
             ]);
     }
 
@@ -146,5 +185,29 @@ class Matinee extends Forms\Components\Component
         return array_key_exists($providerId, $providers)
             ? $providers[$providerId]::make()->url($url)
             : null;
+    }
+
+    public function showPreview(bool | Closure $showPreview = true): static
+    {
+        $this->shouldShowPreview = $showPreview;
+
+        return $this;
+    }
+
+    public function shouldShowPreview(): bool
+    {
+        return $this->evaluate($this->shouldShowPreview) ?? false;
+    }
+
+    public function required(bool | Closure $required = true): static
+    {
+        $this->isRequired = $required;
+
+        return $this;
+    }
+
+    public function isRequired(): bool
+    {
+        return $this->evaluate($this->isRequired) ?? false;
     }
 }

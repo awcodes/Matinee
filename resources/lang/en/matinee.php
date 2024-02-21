@@ -19,4 +19,6 @@ return [
     'preview' => 'Preview',
     'options' => 'Options',
     'invalid_url' => 'There is no provider for this URL.',
+    'show_preview' => 'Show preview',
+    'hide_preview' => 'Hide preview',
 ];

@@ -1,6 +1,6 @@
 {
     "name": "awcodes/matinee",
-    "description": "OEmbed and Video field for Filament Panel and Form Builders.",
+    "description": "OEmbed field for Filament Panel and Form Builders.",
     "keywords": [
         "awcodes",
         "laravel",
@@ -23,7 +23,7 @@
     ],
     "require": {
         "php": "^8.1",
-        "filament/filament": "^3.0",
+        "filament/forms": "^3.0",
         "spatie/laravel-package-tools": "^1.15.0"
     },
     "require-dev": {
