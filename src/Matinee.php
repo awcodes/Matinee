@@ -92,8 +92,8 @@ class Matinee extends FormsComponent
                         $livewire->validateOnly($component->getStatePath());
 
                         $provider = $this->getProvider($state);
-                        $set('embed_url', $provider->convertUrl($get('options')));
-                        $set('options', $provider->getOptions());
+                        $set('embed_url', $provider?->convertUrl($get('options')) ?? null);
+                        $set('options', $provider?->getOptions() ?? []);
                     }),
                 Group::make([
                     Group::make([
@@ -171,7 +171,7 @@ class Matinee extends FormsComponent
         })->toArray();
     }
 
-    public function getProvider(string $url): ?MatineeProvider
+    public function getProvider(?string $url): ?MatineeProvider
     {
         $providers = $this->getProviders();
         $providerId = 'youtube';
