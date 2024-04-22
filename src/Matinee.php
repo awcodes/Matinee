@@ -87,6 +87,8 @@ class Matinee extends FormsComponent
                     ->afterStateUpdated(function (TextInput $component, Component $livewire, Set $set, Get $get, $state) {
                         if (! $state) {
                             $set('embed_url', null);
+
+                            return;
                         }
 
                         $livewire->validateOnly($component->getStatePath());
