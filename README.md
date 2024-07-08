@@ -61,7 +61,7 @@ Matinee::make('video')
 
 ## Custom Providers
 
-Matinee comes with a Provider for YouTube and Vimeo, but you can add your own by creating a class and passing it into the `providers` modifier on the field.
+Matinee comes with a Provider for YouTube, Vimeo and Tiktok, but you can add your own by creating a class and passing it into the `providers` modifier on the field.
 
 ```php
 use Awcodes\Matinee\Providers\Concerns\IsMatineeProvider;

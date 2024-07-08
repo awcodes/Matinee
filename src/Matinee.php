@@ -3,6 +3,7 @@
 namespace Awcodes\Matinee;
 
 use Awcodes\Matinee\Providers\Contracts\MatineeProvider;
+use Awcodes\Matinee\Providers\TiktokProvider;
 use Awcodes\Matinee\Providers\VimeoProvider;
 use Awcodes\Matinee\Providers\YoutubeProvider;
 use Closure;
@@ -156,7 +157,7 @@ class Matinee extends FormsComponent
     {
         return collect([
             ...$this->providers ?? [],
-            ...[VimeoProvider::class, YoutubeProvider::class],
+            ...[VimeoProvider::class, YoutubeProvider::class, TiktokProvider::class],
         ])->mapWithKeys(function ($provider) {
             $instance = $provider::make();
             $domains = $instance->getDomains();
