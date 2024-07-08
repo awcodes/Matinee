@@ -42,8 +42,11 @@ class YoutubeProvider implements Contracts\MatineeProvider
 
         if (Str::of($this->url)->contains('youtu.be')) {
             $id = Str::of($this->url)->after('youtu.be/');
-        } else {
+        } elseif (Str::of($this->url)->contains('/v=')){
             preg_match('/v=([-\w]+)/', $this->url, $matches);
+            $id = $matches[1] ?? null;
+        } else {
+            preg_match('/shorts\/([-\w]+)/', $this->url, $matches);
             $id = $matches[1] ?? null;
         }
 
