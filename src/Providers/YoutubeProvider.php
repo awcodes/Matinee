@@ -53,7 +53,7 @@ class YoutubeProvider implements Contracts\MatineeProvider
 
         if (isset($options['start'])) {
             $options['start'] = Str::of($options['start'])->isMatch('/([0-9]{2}):([0-9]{2}):([0-9]{2})/')
-                ? Carbon::parse($options['start'])->diffInSeconds('00:00:00')
+                ? Carbon::parse('00:00:00')->diffInSeconds($options['start'])
                 : null;
         }
 
