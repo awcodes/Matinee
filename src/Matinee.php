@@ -59,9 +59,9 @@ class Matinee extends FormsComponent
     public function getLabel(): string | Htmlable | null
     {
         $label = $this->evaluate($this->name);
-        $label = (is_string($label) && $this->shouldTranslateLabel) ?
-            __($label) :
-            $label;
+        $label = ($this->shouldTranslateLabel)
+            ? __($label)
+            : $label;
 
         return (string) str($label)->snake(' ')->replace('_', ' ')->title();
     }
@@ -140,7 +140,12 @@ class Matinee extends FormsComponent
                             }),
                     ]),
                     KeyValue::make('options')
-                        ->label(trans('matinee::matinee.options')),
+                        ->live(onBlur: true)
+                        ->label(trans('matinee::matinee.options'))
+                        ->afterStateUpdated(function (Set $set, Get $get, $state) {
+                            $provider = $this->getProvider($get('url'));
+                            $set('embed_url', $provider?->convertUrl($get('options')) ?? null);
+                        }),
                 ])->columns(),
             ]);
     }
