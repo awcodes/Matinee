@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Awcodes\Matinee\Providers;
 
 use Awcodes\Matinee\Providers\Concerns\IsMatineeProvider;
@@ -49,10 +51,10 @@ class YoutubeProvider implements Contracts\MatineeProvider
             $id = $matches[1] ?? null;
         }
 
-        $baseUrl = $baseUrl . $id;
+        $baseUrl .= $id;
 
         if (isset($options['start'])) {
-            $options['start'] = Str::of($options['start'])->isMatch('/([0-9]{2}):([0-9]{2}):([0-9]{2})/')
+            $options['start'] = Str::of($options['start'])->isMatch('/(\d{2}):(\d{2}):(\d{2})/')
                 ? Carbon::parse('00:00:00')->diffInSeconds($options['start'])
                 : null;
         }
@@ -60,7 +62,7 @@ class YoutubeProvider implements Contracts\MatineeProvider
         if (filled($options)) {
             $query = http_build_query($options);
 
-            return "{$baseUrl}?{$query}";
+            return "$baseUrl?$query";
         }
 
         return $baseUrl;

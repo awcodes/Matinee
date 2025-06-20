@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Awcodes\Matinee\Providers;
 
 use Awcodes\Matinee\Providers\Concerns\IsMatineeProvider;
@@ -32,19 +34,19 @@ class VimeoProvider implements Contracts\MatineeProvider
         $baseUrl = 'https://player.vimeo.com/video/';
 
         if (Str::of($this->url)->contains('/video/')) {
-            preg_match('/([0-9]+)/', $this->url, $matches);
-            $id = $matches[1] ?? null;
+            preg_match('/(\d+)/', $this->url, $matches);
         } else {
-            preg_match('/\.com\/([0-9]+)/', $this->url, $matches);
-            $id = $matches[1] ?? null;
+            preg_match('/\.com\/(\d+)/', $this->url, $matches);
         }
 
-        $baseUrl = $baseUrl . $id;
+        $id = $matches[1] ?? null;
+
+        $baseUrl .= $id;
 
         if (filled($options)) {
             $query = http_build_query($options);
 
-            return "{$baseUrl}?{$query}";
+            return "$baseUrl?$query";
         }
 
         return $baseUrl;

@@ -1,11 +1,18 @@
-# Matinee
-
-OEmbed and Video field for Filament Panel and Form Builders
+<img src="https://res.cloudinary.com/aw-codes/image/upload/w_1200,f_auto,q_auto/plugins/matinee/awcodes-matinee.jpg" alt="table repeater opengraph image" width="1200" height="auto" class="filament-hidden" style="width: 100%;" />
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/awcodes/matinee.svg?style=flat-square)](https://packagist.org/packages/awcodes/matinee)
 [![Total Downloads](https://img.shields.io/packagist/dt/awcodes/matinee.svg?style=flat-square)](https://packagist.org/packages/awcodes/matinee)
 
-<img src="https://res.cloudinary.com/aw-codes/image/upload/w_1200,f_auto,q_auto/plugins/matinee/awcodes-matinee.jpg" alt="table repeater opengraph image" width="1200" height="auto" class="filament-hidden" style="width: 100%;" />
+# Matinée
+
+OEmbed and Video field for Filament Panel and Form Builders
+
+## Compatibility
+
+| Package Version | Filament Version |
+|-----------------|------------------|
+| 1.x             | 3.x              |
+| 2.x             | 4.x              |
 
 ## Installation
 
@@ -16,25 +23,17 @@ composer require awcodes/matinee
 ```
 
 > [!IMPORTANT]
-> If you have not set up a custom theme and are using a Panel follow the instructions in the [Filament Docs](https://filamentphp.com/docs/3.x/panels/themes#creating-a-custom-theme) first. The following applies to both the Panels Package and the standalone Forms package.
+> If you have not set up a custom theme and are using Filament Panels follow the instructions in the [Filament Docs](https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme) first.
 
-Add the plugin's views to your `tailwind.config.js` file.
+After setting up a custom theme add the plugin's views to your theme css file or your app's css file if using the standalone packages.
 
-```js
-content: [
-    './vendor/awcodes/matinee/resources/views/**/*.blade.php',
-]
-```
-
-Rebuild your custom theme.
-
-```sh
-npm run build
+```css
+@source '../../../../vendor/awcodes/matinee/resources/**/*.blade.php';
 ```
 
 ## Preparing your model
 
-Matinee stores its content as JSON data in a single column on your model. So, it is vital that you cast the column to an array or json object in your model.
+Matinée stores its content as JSON data in a single column on your model. So, it is vital that you cast the column to an array or json object in your model.
 
 ```php
 protected $casts = [
@@ -61,7 +60,7 @@ Matinee::make('video')
 
 ## Custom Providers
 
-Matinee comes with a Provider for YouTube and Vimeo, but you can add your own by creating a class and passing it into the `providers` modifier on the field.
+Matinée comes with a Provider for YouTube and Vimeo, but you can add your own by creating a class and passing it into the `providers` modifier on the field.
 
 ```php
 use Awcodes\Matinee\Providers\Concerns\IsMatineeProvider;
@@ -109,7 +108,7 @@ Matinee::make('video')
 
 ## Rendering the video
 
-You are free to render the video in any way you see fit, but Matinee comes with a blade component you can use for convenience.
+You are free to render the video in any way you see fit, but Matinée comes with a blade component you can use for convenience.
 
 ```blade
 <x-matinee::embed :data="$data" />
@@ -138,17 +137,13 @@ The stored data will take the following shape:
 composer test
 ```
 
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
 ## Contributing
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+Please review [our security policy](.github/SECURITY.md) on how to report security vulnerabilities.
 
 ## Credits
 

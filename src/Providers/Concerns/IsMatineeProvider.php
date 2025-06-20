@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Awcodes\Matinee\Providers\Concerns;
 
-use Filament\Forms\Components\Concerns\HasId;
+use Filament\Schemas\Components\Concerns\HasId;
 
 trait IsMatineeProvider
 {

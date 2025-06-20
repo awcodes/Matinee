@@ -11,6 +11,7 @@
                 'id' => $getId(),
             ], escape: false)
             ->merge($getExtraAttributes(), escape: false)
+            ->class('matinee-component')
     "
 >
     <div x-data="{preview: @js($shouldShowPreview())}">
