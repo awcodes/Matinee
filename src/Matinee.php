@@ -171,7 +171,7 @@ class Matinee extends FormsComponent
                 return [$instance->getId() => $provider];
             }
 
-            return collect($domains)->mapWithKeys(fn ($domain) => [$domain => $provider]);
+            return collect($domains)->mapWithKeys(fn ($domain): array => [$domain => $provider]);
         })->toArray();
     }
 
