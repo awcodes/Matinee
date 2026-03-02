@@ -1,11 +1,11 @@
-<img src="https://res.cloudinary.com/aw-codes/image/upload/w_1200,f_auto,q_auto/plugins/matinee/awcodes-matinee.jpg" alt="table repeater opengraph image" width="1200" height="auto" class="filament-hidden" style="width: 100%;" />
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/awcodes/matinee.svg?style=flat-square)](https://packagist.org/packages/awcodes/matinee)
-[![Total Downloads](https://img.shields.io/packagist/dt/awcodes/matinee.svg?style=flat-square)](https://packagist.org/packages/awcodes/matinee)
-
 # Matinée
 
-OEmbed and Video field for Filament Panel and Form Builders
+OEmbed and Video field for Filament Panel and Form Builders.
+
+[![Latest Version](https://img.shields.io/github/release/awcodes/matinee.svg?style=flat-square)](https://github.com/awcodes/matinee/releases)
+[![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Total Downloads](https://img.shields.io/packagist/dt/awcodes/matinee.svg?style=flat-square)](https://packagist.org/packages/awcodes/matinee)
+![GitHub Repo stars](https://img.shields.io/github/stars/awcodes/matinee?style=flat-square)
 
 ## Compatibility
 
