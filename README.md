@@ -15,6 +15,8 @@ OEmbed and Video field for Filament Panel and Form Builders.
 | 2.x             | 4.x              |
 | 3.x             | 5.x              |
 
+<!-- [docs_start] -->
+
 ## Installation
 
 You can install the package via composer:
@@ -131,6 +133,8 @@ The stored data will take the following shape:
     }
 }
 ```
+
+<!-- [docs_end] -->
 
 ## Testing
 
