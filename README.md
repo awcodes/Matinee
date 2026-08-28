@@ -68,15 +68,11 @@ Matinée comes with a Provider for YouTube and Vimeo, but you can add your own b
 ```php
 use Awcodes\Matinee\Providers\Concerns\IsMatineeProvider;
 use Awcodes\Matinee\Providers\Contracts\MatineeProvider;
+use Illuminate\Support\Str;
 
 class CustomProvider implements MatineeProvider
 {
     use IsMatineeProvider;
-
-    public function getId(): ?string
-    {
-        return 'custom';
-    }
 
     public function getDomains(): array
     {
@@ -95,7 +91,9 @@ class CustomProvider implements MatineeProvider
 
     public function convertUrl(?array $options = []): string
     {
-        return 'https://www.custom.com/embed/' . $this->getId() . '?' . http_build_query($options);
+        $id = Str::of($this->url)->after('custom.com/');
+
+        return 'https://www.custom.com/embed/' . $id . '?' . http_build_query($options);
     }
 }
 ```

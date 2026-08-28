@@ -34,5 +34,5 @@ it('can use custom providers', function () {
     expect($field->getProviders())->toContain(CustomProvider::class)
         ->and($field->getProvider($url))
         ->toBeInstanceOf(CustomProvider::class)
-        ->and($field->getProvider($url)->convertUrl())->toBe('https://www.custom.com/embed/custom?');
+        ->and($field->getProvider($url)->convertUrl())->toBe('https://www.custom.com/embed/123456?');
 });
