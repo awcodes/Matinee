@@ -188,7 +188,7 @@ class Matinee extends FormsComponent
         $providers = $this->getProviders();
         $providerId = 'youtube';
 
-        $domain = parse_url((str_contains((string) $url, '://') ? '' : 'http://').trim((string) $url), PHP_URL_HOST);
+        $domain = parse_url((str_contains((string) $url, '://') ? '' : 'http://').mb_trim((string) $url), PHP_URL_HOST);
 
         if (preg_match('/[a-z0-9][a-z0-9\-]{0,63}\.[a-z]{2,6}(\.[a-z]{1,2})?$/i', $domain, $match)) {
             $providerId = $match[0];
