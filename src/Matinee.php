@@ -143,6 +143,14 @@ class Matinee extends FormsComponent
 
     public function getLabel(): string|Htmlable|null
     {
+        if ($this->hasCustomLabel()) {
+            $label = $this->evaluate($this->label);
+
+            return (is_string($label) && $this->shouldTranslateLabel)
+                ? __($label)
+                : $label;
+        }
+
         $label = $this->evaluate($this->name);
         $label = ($this->shouldTranslateLabel)
             ? __($label)
