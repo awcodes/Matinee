@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Awcodes\Matinee\Tests\Fixtures;
 
-use Awcodes\Matinee\Tests\Fixtures\Models\Page;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Livewire\Component;
+use Workbench\App\Models\Page;
 
 class TestForm extends Component implements HasSchemas
 {

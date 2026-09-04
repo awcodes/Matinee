@@ -140,6 +140,22 @@ The stored data will take the following shape:
 composer test
 ```
 
+## Development
+
+Install dependencies:
+
+```bash
+composer install
+```
+
+Start the Workbench application:
+
+```bash
+composer serve
+```
+
+The Workbench is available at `/admin` with `test@example.com` / `password`.
+
 ## Contributing
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.

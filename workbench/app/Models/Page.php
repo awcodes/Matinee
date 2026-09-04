@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Awcodes\Matinee\Tests\Fixtures\Models;
+namespace Workbench\App\Models;
 
-use Awcodes\Matinee\Tests\Database\Factories\PageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Workbench\Database\Factories\PageFactory;
 
 class Page extends Model
 {
+    /** @use HasFactory<PageFactory> */
     use HasFactory;
 
     protected $guarded = [];
