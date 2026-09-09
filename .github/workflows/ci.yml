@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 3.x
+    paths:
+      - "src/**"
+      - "config/**"
+      - "database/**"
+      - "resources/**"
+      - "routes/**"
+      - "tests/**"
+      - "composer.json"
+      - "composer.lock"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.*"
+      - "phpunit.xml*"
+      - "phpstan.neon*"
+      - "rector.php"
+      - "pint.json"
+      - ".github/workflows/**"
+  pull_request:
+    branches:
+      - 3.x
+    paths:
+      - "src/**"
+      - "config/**"
+      - "database/**"
+      - "resources/**"
+      - "routes/**"
+      - "tests/**"
+      - "composer.json"
+      - "composer.lock"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.*"
+      - "phpunit.xml*"
+      - "phpstan.neon*"
+      - "rector.php"
+      - "pint.json"
+      - ".github/workflows/**"
+
+# 3.x serves both Filament majors from one branch, so one caller covers both: the
+# matrix pins Filament per row and the shared workflow installs it before running
+# the suite. The legacy main (Filament 3) and 2.x branches are frozen.
+jobs:
+  ci:
+    uses: awcodes/.github/.github/workflows/filament-plugin.yml@v1
+    with:
+      matrix: |
+        [
+          {"php":"8.5","laravel":"13.*","filament":"5.*","testbench":"11.*","dependencies":"prefer-stable"},
+          {"php":"8.4","laravel":"13.*","filament":"5.*","testbench":"11.*","dependencies":"prefer-stable"},
+          {"php":"8.5","laravel":"12.*","filament":"5.*","testbench":"10.*","dependencies":"prefer-stable"},
+          {"php":"8.4","laravel":"12.*","filament":"5.*","testbench":"10.*","dependencies":"prefer-stable"},
+          {"php":"8.3","laravel":"12.*","filament":"5.*","testbench":"10.*","dependencies":"prefer-stable"},
+          {"php":"8.4","laravel":"12.*","filament":"4.*","testbench":"10.*","dependencies":"prefer-stable"},
+          {"php":"8.3","laravel":"12.*","filament":"4.*","testbench":"10.*","dependencies":"prefer-stable"}
+        ]
+      # Matinee is a form component, not a panel plugin: its runtime require is
+      # filament/forms, so the matrix pins that rather than pulling the whole panel
+      # in just to constrain one component. filament/filament stays a dev dependency
+      # for the workbench app, and the forms pin constrains it transitively — a
+      # "4.*" row resolves filament/filament 4.x, not 5.x.
+      filament-package: filament/forms
+      run-tests: true
+      run-lint: true
+      run-static-analysis: true
+      run-reformat: true
+      # No `build` script and no committed resources/dist — package.json only carries
+      # build:workbench, which is for the local demo app.
+      run-build: false
