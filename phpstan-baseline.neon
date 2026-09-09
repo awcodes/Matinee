@@ -1,6 +1,19 @@
-# Generate this per package with:
-#   vendor/bin/phpstan analyse --generate-baseline
-# Commit the result, then set `run-static-analysis: true` in the caller workflow.
-# An empty baseline (below) is valid for packages that already pass at level 5.
 parameters:
-    ignoreErrors: []
+	ignoreErrors:
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Providers/VimeoProvider.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Providers/YoutubeProvider.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: workbench/routes/web.php
