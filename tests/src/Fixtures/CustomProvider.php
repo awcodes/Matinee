@@ -31,6 +31,6 @@ class CustomProvider implements MatineeProvider
     {
         $id = Str::of($this->url)->after('custom.com/');
 
-        return 'https://www.custom.com/embed/'.$id.'?'.http_build_query($options);
+        return 'https://www.custom.com/embed/' . $id . '?' . http_build_query($options);
     }
 }
