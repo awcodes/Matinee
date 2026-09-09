@@ -35,9 +35,9 @@ class Matinee extends FormsComponent
 
     protected string $name;
 
-    protected bool|Closure|null $isRequired = null;
+    protected bool | Closure | null $isRequired = null;
 
-    protected bool|Closure|null $shouldShowPreview = null;
+    protected bool | Closure | null $shouldShowPreview = null;
 
     final public function __construct(?string $name = null)
     {
@@ -141,7 +141,7 @@ class Matinee extends FormsComponent
         return $this->name;
     }
 
-    public function getLabel(): string|Htmlable|null
+    public function getLabel(): string | Htmlable | null
     {
         if ($this->hasCustomLabel()) {
             $label = $this->evaluate($this->label);
@@ -188,7 +188,7 @@ class Matinee extends FormsComponent
         $providers = $this->getProviders();
         $providerId = 'youtube';
 
-        $domain = parse_url((str_contains((string) $url, '://') ? '' : 'http://').trim((string) $url), PHP_URL_HOST);
+        $domain = parse_url((str_contains((string) $url, '://') ? '' : 'http://') . trim((string) $url), PHP_URL_HOST);
 
         if (preg_match('/[a-z0-9][a-z0-9\-]{0,63}\.[a-z]{2,6}(\.[a-z]{1,2})?$/i', $domain, $match)) {
             $providerId = $match[0];
@@ -199,7 +199,7 @@ class Matinee extends FormsComponent
             : null;
     }
 
-    public function showPreview(bool|Closure $showPreview = true): static
+    public function showPreview(bool | Closure $showPreview = true): static
     {
         $this->shouldShowPreview = $showPreview;
 
@@ -211,7 +211,7 @@ class Matinee extends FormsComponent
         return $this->evaluate($this->shouldShowPreview) ?? false;
     }
 
-    public function required(bool|Closure $required = true): static
+    public function required(bool | Closure $required = true): static
     {
         $this->isRequired = $required;
 

@@ -27,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
     public function boot(): void
     {
         FilamentAsset::register([
-            Theme::make('workbench', __DIR__.'/../../../resources/dist/theme.css'),
+            Theme::make('workbench', __DIR__ . '/../../../resources/dist/theme.css'),
         ], 'workbench');
     }
 
@@ -43,7 +43,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->theme('workbench')
             ->discoverResources(
-                in: __DIR__.'/../../Filament/Resources',
+                in: __DIR__ . '/../../Filament/Resources',
                 for: 'Workbench\App\Filament\Resources',
             )
             ->pages([
