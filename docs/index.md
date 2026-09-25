@@ -16,16 +16,6 @@ It ships with providers for YouTube and Vimeo, and you can add your own for any 
 - An optional in-form preview, so an editor can confirm they pasted the right video.
 - A Blade component for rendering the stored video on the front end.
 
-## Compatibility
-
-| Package version | Filament version |
-|-----------------|------------------|
-| 1.x             | 3.x              |
-| 2.x             | 4.x              |
-| 3.x             | 4.x & 5.x        |
-
-Matinée requires PHP 8.2 or later.
-
 ## Where to go next
 
 - [Installation](installation.md) — install the package, register its styles, and prepare your model.

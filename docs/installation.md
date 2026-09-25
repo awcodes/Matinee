@@ -5,6 +5,16 @@ description: Install Matinée, register its styles with your theme, and prepare 
 
 # Installation
 
+## Compatibility
+
+| Filament version | Package version |
+|------------------|-----------------|
+| 3.x              | 1.x             |
+| 4.x              | 2.x             |
+| 4.x & 5.x        | 3.x             |
+
+Matinée requires PHP 8.2 or later and `filament/forms`.
+
 ## Requiring the package
 
 Install the package via Composer:
