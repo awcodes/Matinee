@@ -1,160 +1,36 @@
 # Matinée
 
-OEmbed and Video field for Filament Panel and Form Builders.
+An oEmbed and video field for Filament Panel and Form Builders that turns a pasted video URL into a stored embed you can render anywhere.
 
 [![Latest Version](https://img.shields.io/github/release/awcodes/matinee.svg?style=flat-square&color=blue&label=Release)](https://github.com/awcodes/matinee/releases)
 [![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE.md)
 [![Total Downloads](https://img.shields.io/packagist/dt/awcodes/matinee.svg?style=flat-square&color=blue&label=Downloads)](https://packagist.org/packages/awcodes/matinee)
 [![GitHub Repo stars](https://img.shields.io/github/stars/awcodes/matinee?style=flat-square&color=blue&label=Stars)](https://github.com/awcodes/matinee/stargazers)
+[![Filament Version](https://img.shields.io/badge/Filament-4.x%20%26%205.x-d97706.svg?style=flat-square)](https://filamentphp.com/docs/5.x/panels/installation)
+
+## Documentation
+
+The full documentation lives at **[docs.aw.codes/matinee](https://docs.aw.codes/matinee/3.x)**.
 
 ## Compatibility
 
-| Package Version | Filament Version |
-|-----------------|------------------|
-| 1.x             | 3.x              |
-| 2.x             | 4.x              |
-| 3.x             | 4.x & 5.x        |
-
-<!-- [docs_start] -->
+| Filament version | Package version |
+|------------------|-----------------|
+| 3.x              | 1.x             |
+| 4.x              | 2.x             |
+| 4.x & 5.x        | 3.x             |
 
 ## Installation
-
-You can install the package via composer:
 
 ```bash
 composer require awcodes/matinee
 ```
 
-> [!IMPORTANT]
-> If you have not set up a custom theme and are using Filament Panels follow the instructions in the [Filament Docs](https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme) first.
+The field needs your Tailwind theme to see the package's views and a model attribute cast to an array. See [Installation](https://docs.aw.codes/matinee/3.x/installation) for both steps.
 
-After setting up a custom theme add the plugin's views to your theme css file or your app's css file if using the standalone packages.
+## Changelog
 
-```css
-@source '../../../../vendor/awcodes/matinee/resources/**/*.blade.php';
-```
-
-## Preparing your model
-
-Matinée stores its content as JSON data in a single column on your model. So, it is vital that you cast the column to an array or json object in your model.
-
-```php
-protected $casts = [
-    'video' => 'array', // or 'json'
-];
-```
-
-## Usage
-
-```php
-use Awcodes\Matinee\Matinee;
-
-Matinee::make('video')
-```
-
-## Forcing the preview to show
-
-```php
-use Awcodes\Matinee\Matinee;
-
-Matinee::make('video')
-    ->showPreview()
-```
-
-## Custom Providers
-
-Matinée comes with a Provider for YouTube and Vimeo, but you can add your own by creating a class and passing it into the `providers` modifier on the field.
-
-```php
-use Awcodes\Matinee\Providers\Concerns\IsMatineeProvider;
-use Awcodes\Matinee\Providers\Contracts\MatineeProvider;
-use Illuminate\Support\Str;
-
-class CustomProvider implements MatineeProvider
-{
-    use IsMatineeProvider;
-
-    public function getDomains(): array
-    {
-        return [
-            'custom.com',
-        ];
-    }
-
-    public function getOptions(): array
-    {
-        return [
-            'controls' => 1,
-            'title' => 0,
-        ];
-    }
-
-    public function convertUrl(?array $options = []): string
-    {
-        $id = Str::of($this->url)->after('custom.com/');
-
-        return 'https://www.custom.com/embed/' . $id . '?' . http_build_query($options);
-    }
-}
-```
-
-Then you can use it by passing it into the `providers` modifier on the field instance or globally in the `register` method of a service provider with the `configureUsing()` method.
-
-```php
-use Awcodes\Matinee\Matinee;
-
-Matinee::make('video')
-    ->providers([CustomProvider::class])
-```
-
-## Rendering the video
-
-You are free to render the video in any way you see fit, but Matinée comes with a blade component you can use for convenience.
-
-```blade
-<x-matinee::embed :data="$data" />
-```
-
-The stored data will take the following shape:
-
-```json
-{
-    "width": "16",
-    "height": "9",
-    "responsive": true,
-    "url": "https:\/\/www.youtube.com\/watch?v=N9qZFD1NkhI",
-    "embed_url": "https:\/\/www.youtube.com\/embed\/N9qZFD1NkhI?controls=1&start=0",
-    "options": {
-        "controls": "1",
-        "nocookie": "0",
-        "start": "00:00:00"
-    }
-}
-```
-
-<!-- [docs_end] -->
-
-## Testing
-
-```bash
-composer test
-```
-
-## Development
-
-Install dependencies:
-
-```bash
-composer install
-```
-
-Start the Workbench application:
-
-```bash
-composer serve
-```
-
-The Workbench is available at `/admin` with `test@example.com` / `password`.
+Please see the [releases](https://github.com/awcodes/Matinee/releases) for what has changed recently.
 
 ## Contributing
 
