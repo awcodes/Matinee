@@ -61,7 +61,7 @@ on:
 # the suite. The legacy main (Filament 3) and 2.x branches are frozen.
 jobs:
   ci:
-    uses: awcodes/.github/.github/workflows/filament-plugin.yml@v1
+    uses: awcodes/.github/.github/workflows/filament-plugin.yml@ad63f1536b965fed92274516cb81f172b1d60e1a # v1.4.3
     with:
       matrix: |
         [
