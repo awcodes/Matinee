@@ -17,6 +17,9 @@ Matinee::make('video')
 
 The field renders as a fieldset containing a URL input, width and height inputs, a responsive toggle, and a key-value editor for the provider's options.
 
+![The Matinée field on an edit form, with a YouTube URL, a 16 by 9 responsive size, the YouTube options in a key-value editor, and the video preview open below](assets/field-light.png#gh-light-mode-only)
+![The Matinée field on an edit form, with a YouTube URL, a 16 by 9 responsive size, the YouTube options in a key-value editor, and the video preview open below](assets/field-dark.png#gh-dark-mode-only)
+
 As the URL is typed, Matinée looks up a provider for its domain and fills in the embed URL and that provider's default options. A URL that no provider recognises fails validation with "There is no provider for this URL." — see [Providers](providers.md) for how domains are matched.
 
 By default the label is derived from the field's name, so `Matinee::make('video')` is labelled "Video" and `Matinee::make('video_url')` is labelled "Video Url". Set your own with `label()`, which accepts a string or a closure:
@@ -54,6 +57,11 @@ Matinee::make('video')
 
 This sets the preview's initial state only — the toggle button is always available once a video has been resolved, and the editor can still close it. `showPreview()` accepts a boolean or a closure.
 
+Switching **Responsive** off sets the size to 640 by 480 and changes the width and height inputs from percentages to pixels:
+
+![The Matinée field with a Vimeo URL, Responsive switched off, a width of 640 and a height of 480 in pixels, and the Vimeo options in the key-value editor](assets/fixed-size-light.png#gh-light-mode-only)
+![The Matinée field with a Vimeo URL, Responsive switched off, a width of 640 and a height of 480 in pixels, and the Vimeo options in the key-value editor](assets/fixed-size-dark.png#gh-dark-mode-only)
+
 ## Rendering the video
 
 You are free to render the stored data however you like, but Matinée ships a Blade component for convenience:
@@ -63,6 +71,9 @@ You are free to render the stored data however you like, but Matinée ships a Bl
 ```
 
 Pass it the field's stored value — for the example above, `$page->video`. The component renders nothing at all when the data is empty, so it is safe to use on a record that has no video.
+
+![A front-end page rendering a stored responsive video with the embed component, filling the page width at a 16:9 ratio below the page title](assets/embed-light.png#gh-light-mode-only)
+![A front-end page rendering a stored responsive video with the embed component, filling the page width at a 16:9 ratio below the page title](assets/embed-dark.png#gh-dark-mode-only)
 
 Any extra attributes you put on the component are forwarded to the underlying `<iframe>`, which is how you add playback permissions or your own classes:
 
