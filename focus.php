@@ -42,8 +42,8 @@ return ScreenshotSuite::make()
                 ->waitFor('[data-focus="poster"]'))
             ->focus('[data-focus="video-field"]'),
 
-        // The Vimeo page is stored with `responsive` false, but the field hydrates it as true (see the PR body), so
-        // the toggle is switched off the way an editor would, which sets 640x480 pixels.
+        // The Vimeo page is stored with `responsive` false, but the field hydrates a false toggle as true, so the
+        // toggle is switched off the way an editor would, which sets 640x480 pixels.
         Screenshot::make('fixed-size')
             ->viewportSize(1280, 1400)
             ->visit('/admin/pages/2/edit')
