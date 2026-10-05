@@ -18,7 +18,8 @@ class PageForm
                 TextInput::make('slug')->required(),
                 Matinee::make('video')
                     ->showPreview()
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->extraAttributes(['data-focus' => 'video-field']),
             ]);
     }
 }

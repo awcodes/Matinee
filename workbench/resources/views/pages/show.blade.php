@@ -4,10 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $page->title }}</title>
+    <link rel="stylesheet" href="{{ asset('fonts/filament/filament/inter/index.css') }}">
     <link rel="stylesheet" href="{{ asset('workbench/theme.css') }}">
+    <script>
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <style>
+        html {
+            font-family: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 p-8 text-gray-950 dark:bg-gray-950 dark:text-white">
-    <main class="mx-auto max-w-4xl space-y-6">
+    <main class="mx-auto max-w-4xl space-y-6" data-focus="embed-page">
         <h1 class="text-3xl font-bold">{{ $page->title }}</h1>
         <x-matinee::embed
             :data="$page->video"
