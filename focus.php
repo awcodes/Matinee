@@ -6,6 +6,7 @@ use Awcodes\Focus\Card;
 use Awcodes\Focus\Enums\Size;
 use Awcodes\Focus\Screenshot;
 use Awcodes\Focus\ScreenshotSuite;
+use Playwright\Page\PageInterface;
 
 /*
  * Documentation screenshots for Matinée, generated with awcodes/focus from the Workbench (run `composer build`
@@ -42,13 +43,10 @@ return ScreenshotSuite::make()
                 ->waitFor('[data-focus="poster"]'))
             ->focus('[data-focus="video-field"]'),
 
-        // The Vimeo page is stored with `responsive` false, but the field hydrates a false toggle as true, so the
-        // toggle is switched off the way an editor would, which sets 640x480 pixels.
+        // The Vimeo page is stored with `responsive` false at 640x480 pixels.
         Screenshot::make('fixed-size')
             ->viewportSize(1280, 1400)
             ->visit('/admin/pages/2/edit')
-            ->click('[data-focus="video-field"] button[role="switch"]')
-            ->waitFor('[data-focus="video-field"] button[role="switch"][aria-checked="false"]')
             ->within('[data-focus="video-field"] iframe', fn (Screenshot $screenshot) => $screenshot
                 ->waitFor('[data-focus="poster"]'))
             ->focus('[data-focus="video-field"]'),
@@ -60,14 +58,31 @@ return ScreenshotSuite::make()
                 ->waitFor('[data-focus="poster"]'))
             ->focus('[data-focus="embed-page"]'),
 
+        // A fixed-size embed on the same front-end page keeps its stored pixel size instead of filling the width.
+        Screenshot::make('embed-fixed')
+            ->visit('/pages/fixed-size-vimeo-embed')
+            ->within('[data-focus="embed-page"] iframe', fn (Screenshot $screenshot) => $screenshot
+                ->waitFor('[data-focus="poster"]'))
+            ->focus('[data-focus="embed-page"]'),
+
         // The share-image source, shaped to the card templates' screenshot slots. The two-up templates show it dark
-        // in slot 1 and light in slot 2, so it is captured in both themes.
+        // in slot 1 and light in slot 2, so it is captured in both themes. The page is scrolled so the top of the
+        // field sits just below the sticky top bar, which keeps the URL, size and options in frame.
         Screenshot::make('card-field')
             ->viewportSize(...$card)
             ->visit('/admin/pages/1/edit')
             ->within('[data-focus="video-field"] iframe', fn (Screenshot $screenshot) => $screenshot
                 ->waitFor('[data-focus="poster"]'))
-            ->scrollIntoView('[data-focus="video-field"] iframe')
+            ->ready(function (PageInterface $page): void {
+                $page->evaluate(<<<'JS'
+                    () => {
+                        const field = document.querySelector('[data-focus="video-field"]');
+                        const topbar = document.querySelector('.fi-topbar-ctn');
+
+                        window.scrollTo(0, field.getBoundingClientRect().top + window.scrollY - topbar.offsetHeight - 12);
+                    }
+                    JS);
+            })
             ->viewport(),
     ])
     ->cardTemplates('https://github.com/awcodes/focus-templates/tree/v2.1.0/dist')

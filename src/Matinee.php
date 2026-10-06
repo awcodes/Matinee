@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Awcodes\Matinee;
 
+use Awcodes\Matinee\Components\ResponsiveToggle;
 use Awcodes\Matinee\Providers\Contracts\MatineeProvider;
 use Awcodes\Matinee\Providers\VimeoProvider;
 use Awcodes\Matinee\Providers\YoutubeProvider;
@@ -12,7 +13,6 @@ use Exception;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Component as FormsComponent;
 use Filament\Schemas\Components\Concerns\HasLabel;
 use Filament\Schemas\Components\Group;
@@ -96,10 +96,11 @@ class Matinee extends FormsComponent
                                 ->afterStateHydrated(fn (TextInput $component, $state): TextInput => $component->state($state ?: '9'))
                                 ->suffix(fn (Get $get): string => $get('responsive') ? '%' : 'px'),
                         ])->columns(),
-                        Toggle::make('responsive')
+                        ResponsiveToggle::make('responsive')
+                            ->default(true)
                             ->live()
                             ->label(trans('matinee::matinee.responsive'))
-                            ->afterStateHydrated(fn (Toggle $component, $state): Toggle => $component->state($state ?: true))
+                            ->afterStateHydrated(fn (ResponsiveToggle $component, ?bool $state): ResponsiveToggle => $component->state($state ?? true))
                             ->afterStateUpdated(function (Set $set, $state): void {
                                 if ($state) {
                                     $set('width', '16');

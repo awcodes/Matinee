@@ -86,7 +86,10 @@ Any extra attributes you put on the component are forwarded to the underlying `<
 />
 ```
 
-When `responsive` is true, the component sizes the iframe to 100% width and derives its `aspect-ratio` from the stored width and height — so `16` and `9` mean a 16:9 ratio rather than 16 by 9 pixels. When `responsive` is false, the stored width and height are used as pixel dimensions.
+When `responsive` is true, the component sizes the iframe to 100% width and derives its `aspect-ratio` from the stored width and height — so `16` and `9` mean a 16:9 ratio rather than 16 by 9 pixels. When `responsive` is false, the stored width and height are used as pixel dimensions:
+
+![A front-end page rendering a stored fixed-size Vimeo embed with the embed component at 640 by 480 pixels, narrower than the page title's column](assets/embed-fixed-light.png#gh-light-mode-only)
+![A front-end page rendering a stored fixed-size Vimeo embed with the embed component at 640 by 480 pixels, narrower than the page title's column](assets/embed-fixed-dark.png#gh-dark-mode-only)
 
 ### The stored data
 
